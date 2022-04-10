@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "./LinkedList.h"
+#include "./LinkedListTemp.h"
 using namespace std;
 
 
@@ -7,10 +7,10 @@ int main()
 {
     int m;
     cin>>m;
-    LinkedList l(m);
-    datatype d=5;
+    LinkedList l(m, 'i');
+    Datatype d={.i=5};
     Node n;
-    n.insert(d);
+    n.insert(d, 'i');
     l.insertValueLeft(n);
     n.modify('+',1);
     l.insertValueLeft(n);
@@ -29,10 +29,10 @@ int main()
     n.modify('+',1);
     l.insertValueLeft(n);
     // l.printAll();
-    cout<<l.deleteLast().value()<<endl;
-    cout<<l.deleteLast().value()<<endl;
-    cout<<l.deleteLast().value()<<endl;
-    cout<<l.deleteFirst().value()<<endl;
+    cout<<l.deleteLast().value().DVdata.i<<endl;
+    cout<<l.deleteLast().value().DVdata.i<<endl;
+    cout<<l.deleteLast().value().DVdata.i<<endl;
+    cout<<l.deleteFirst().value().DVdata.i<<endl;
     // l.printAll();
     l.insertValueRight(n);
     n.modify('+',1);

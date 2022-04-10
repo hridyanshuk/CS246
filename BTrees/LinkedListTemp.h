@@ -1,13 +1,27 @@
 #include <stdio.h>
 #include <string.h>
-typedef int datatype;
-// class datatype{};
-const datatype MAX_datatype=INT_MAX;
+// typedef int datatype;
+// union Datatype{
+    // int i;
+    // char c;
+    // float f;
+// };
+const Datatype MAX_datatype_i={
+    .i=__INT_MAX__
+};
+struct DatatypeValue
+{
+    Datatype DVdata;
+    char DVtype;
+};
+// const Datatype MAX_datatype=__INT_MAX__;
 char lt[]="<";
 char le[]="<=";
 char gt[]=">";
 char ge[]=">=";
-int datatypeComparator(datatype d1, datatype d2, char *operation)
+char eq[]="==";
+
+int datatypeComparator(Datatype d1, Datatype d2, char *operation, char type)
 {
     int op;
     if(strcmpi(operation, "<")==0)
@@ -26,91 +40,123 @@ int datatypeComparator(datatype d1, datatype d2, char *operation)
     {
         op=3;
     }
+    else if(strcmpi)
+        op=4;
     switch (op)
     {
-    case 0:
-        if(d1<d2) // To be changed
-            return 1;
-        else
-            return 0;
-        break;
-    case 1:
-        if(d1>d2) // To be changed
-            return 1;
-        else
-            return 0;
-    case 2:
-        if(d1<=d2)
-            return 1;
-        else
-            return 0;
-        break;
-    case 3:
-        if(d1>=d2)
-            return 1;
-        else
-            return 0;
-    default:
-        break;
+        case 0:
+            if(type='i')
+            {
+                if(d1.i<d2.i) // To be changed
+                    return 1;
+                else
+                    return 0;
+            }
+            break;
+        case 1:
+            if(type='i')
+            {
+                if(d1.i>d2.i) // To be changed
+                    return 1;
+                else
+                    return 0;
+            }
+        case 2:
+            if(type='i')
+            {
+                if(d1.i<=d2.i) // To be changed
+                    return 1;
+                else
+                    return 0;
+            }
+            break;
+        case 3:
+            if(type='i')
+            {
+                if(d1.i>=d2.i) // To be changed
+                    return 1;
+                else
+                    return 0;
+            }
+        case 4:
+            if(type='i')
+            {
+                if(d1.i==d2.i) // To be changed
+                    return 1;
+                else
+                    return 0;
+            }
+        default:
+            break;
     }
     return 10;
 }
 class Node
 {
-    datatype data;
+    char type;
+    Datatype data;
     public:
-    void insert(datatype);
+    void insert(Datatype, char);
     void modify(char, int);
-    datatype value();
+    DatatypeValue value();
     int key;
     Node* right;
     Node* left;
     
 };
 
-void Node::insert(datatype d)
+void Node::insert(Datatype d, char t)
 {
+    type=t;
     data=d;
 }
+
 void Node::modify(char op, int operand)
 {
-    switch(op)
+    if(type=='i')
     {
-        case '+':
-            data+=operand;
-            break;
-        case '-':
-            data-=operand;
-            break;
-        case '*':
-            data*=operand;
-            break;
-        case '/':
-            data/=operand;
-            break;
-        case '%':
-            data%=operand;
-            break;
+        switch(op)
+        {
+            case '+':
+                data.i+=operand;
+                break;
+            case '-':
+                data.i-=operand;
+                break;
+            case '*':
+                data.i*=operand;
+                break;
+            case '/':
+                data.i/=operand;
+                break;
+            case '%':
+                data.i%=operand;
+                break;
+        }
     }
 }
-datatype Node::value()
+DatatypeValue Node::value()
 {
-    return data;
+    DatatypeValue dv;
+    dv.DVtype=this->type;
+    dv.DVdata=data;
+    return dv;
 }
 
 
 class LinkedList
 {
-    
+    char type;
     int maxSize;
     Node* start;
     Node* end;
-    public:
     int size;
-        LinkedList(int);
+
+    public:
+        LinkedList(int, char);
         void initialise();
-        void insertValueLeft(Node, Node*);  // Inserts a node with data in function argument on left
-        void insertValueRight(Node, Node*); // Inserts a node with data in function argument on right
+        bool insertValueLeft(Node, Node*);  // Inserts a node with data in function argument on left
+        bool insertValueRight(Node, Node*); // Inserts a node with data in function argument on right
         Node deleteLast();                  // Deletes the last node
         Node deleteFirst();                 // Deletes the first node
         // void insertLeft();               // Inserts a node with data values 0 on left
@@ -123,12 +169,15 @@ class LinkedList
         void setKeys();                     // Assigns keys to all Nodes
         void sort(bool);                    // Sorts ascending or descending
         void printAll();
+        int returnSize();
 };
 
 LinkedList::LinkedList(
-    int m
+    int m,
+    char type
 )
 {
+    this->type=type;
     maxSize=m;
     initialise();
 }
@@ -140,7 +189,7 @@ void LinkedList::initialise()
     size=0;
 }
 
-void LinkedList::insertValueLeft(Node value, Node *node=nullptr)
+bool LinkedList::insertValueLeft(Node value, Node *node=nullptr)
 {
     if(size<maxSize)
     {
@@ -152,13 +201,13 @@ void LinkedList::insertValueLeft(Node value, Node *node=nullptr)
                 Node *temp=new Node;
                 start=temp;
                 start->left=start->right=nullptr;
-                temp->insert(value.value());// Insert value in temp
+                temp->insert(value.value().DVdata, type);// Insert value in temp
                 end=start;
             }
             else
             {
                 Node *temp=new Node;
-                temp->insert(value.value());// Insert value in temp
+                temp->insert(value.value().DVdata, type);// Insert value in temp
                 temp->right=start;
                 temp->left=nullptr;
                 start->left=temp;
@@ -171,7 +220,7 @@ void LinkedList::insertValueLeft(Node value, Node *node=nullptr)
             Node *temp=new Node;
             if(start==node)
                 start=temp;
-            temp->insert(value.value());// Insert value in temp
+            temp->insert(value.value().DVdata, type);// Insert value in temp
             temp->right=node;
             temp->left=node->left;
             if(node->left!=nullptr)
@@ -180,12 +229,13 @@ void LinkedList::insertValueLeft(Node value, Node *node=nullptr)
             
         }
         setKeys();
+        return true;
     }
-    
+    return false;
 }
 
 
-void LinkedList::insertValueRight(Node value, Node *node=nullptr)
+bool LinkedList::insertValueRight(Node value, Node *node=nullptr)
 {
     if(size<maxSize)
     {
@@ -197,7 +247,7 @@ void LinkedList::insertValueRight(Node value, Node *node=nullptr)
                 Node *temp=new Node;
                 start=temp;
                 start->left=start->right=nullptr;
-                temp->insert(value.value());// Insert value in temp
+                temp->insert(value.value().DVdata, type);// Insert value in temp
                 end=start;
                 start->key=0;
             }
@@ -205,7 +255,7 @@ void LinkedList::insertValueRight(Node value, Node *node=nullptr)
             {
                 int key=end->key;
                 Node *temp=new Node;
-                temp->insert(value.value());// Insert value in temp
+                temp->insert(value.value().DVdata, type);// Insert value in temp
                 temp->key=key;
                 temp->left=end;
                 temp->right=nullptr;
@@ -219,7 +269,7 @@ void LinkedList::insertValueRight(Node value, Node *node=nullptr)
             Node *temp=new Node;
             if(end==node)
                 end=temp;
-            temp->insert(value.value());// Insert value in temp
+            temp->insert(value.value().DVdata, type);// Insert value in temp
             temp->left=node;
             temp->right=node->right;
             if(node->right!=nullptr)
@@ -229,7 +279,9 @@ void LinkedList::insertValueRight(Node value, Node *node=nullptr)
             setKeys();
 
         }
+        return true;
     }
+    return false;
 }
 
 Node LinkedList::deleteLast()
@@ -310,16 +362,16 @@ Node* LinkedList::search(Node value)
     Node* temp2=end;
     if(temp1==temp2)
     {
-        if(temp1->value()==value.value())
+        if(datatypeComparator(temp1->value().DVdata,value.value().DVdata, eq, type))
             return temp1;
     }
     while(temp1!=temp2 && temp1!=temp2->right)
     {
-        if(temp1->value()==value.value())
+        if(datatypeComparator(temp1->value().DVdata,value.value().DVdata, eq, type))
         {
             return temp1;
         }
-        else if(temp2->value()==value.value())
+        else if(datatypeComparator(temp2->value().DVdata,value.value().DVdata, eq, type))
         {
             return temp2;
         }
@@ -367,33 +419,36 @@ void LinkedList::setKeys()
     }
 }
 
-void LinkedList::sort(bool ascending=true)
+void LinkedList::sort(bool ascending=true)// for integer types
 {
     if(ascending)
     {
-        for(int i=0 ; i<size ; i++)
+        if(type=='i')
         {
-            datatype min=MAX_datatype;
-            Node *minNode;
-            int mindex;
-            for(int j=i ; j<size ; j++)
+            for(int i=0 ; i<size ; i++)
             {
-                Node *temp=search(j);
-                if(datatypeComparator(min,temp->value(),gt)==1)
+                Datatype min;
+                min=MAX_datatype_i;//check
+                Node *minNode;
+                int mindex;
+                for(int j=i ; j<size ; j++)
                 {
-                    mindex=j;
-                    min=temp->value();
-                    minNode=temp;
+                    Node *temp=search(j);
+                    if(datatypeComparator(min,temp->value().DVdata,gt, type)==1)
+                    {
+                        mindex=j;
+                        min=temp->value().DVdata;
+                        minNode=temp;
+                    }
+                }
+                if(i!=mindex)
+                {
+                    Node temp=*minNode;
+                    deleteNode(minNode);          
+                    insertValueLeft(temp, search(i));
+                    min=MAX_datatype_i;//change
                 }
             }
-            if(i!=mindex)
-            {
-                Node temp=*minNode;
-                deleteNode(minNode);          
-                insertValueLeft(temp, search(i));
-                min=MAX_datatype;
-            }
-            min=MAX_datatype;
         }
     }
 }
@@ -403,8 +458,13 @@ void LinkedList::printAll()
     Node *temp=start;
     while(temp!=end && temp!=nullptr)
     {
-        printf("[%d  %d] --- ",temp->key, temp->value());
+        printf("[%d  %d] --- ",temp->key, temp->value().DVdata.i);
         temp=temp->right;
     }
-    printf("[%d  %d]\n",temp->key, temp->value());
+    printf("[%d  %d]\n",temp->key, temp->value().DVdata.i);
+}
+
+int LinkedList::returnSize()
+{
+    return size;
 }
