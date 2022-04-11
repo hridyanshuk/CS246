@@ -68,7 +68,8 @@ IndexNode* IndexNode::insert(int value, int *iNode, int *dNode, IndexNode *n=nul
             if(p==nullptr)
             {
                 *iNode=*iNode+1;
-                p=new IndexNode(keyCapacity);
+                delete p;
+                p=new IndexNode(keyCapacity, false);
                 p->insert((this->data[inserted-1]+temp->data[(temp->inserted-1)])/2, iNode, dNode);
                 p->ptrs[0]=this;
                 p->ptrs[1]=temp;
@@ -125,7 +126,7 @@ IndexNode* IndexNode::insert(int value, int *iNode, int *dNode, IndexNode *n=nul
             if(p==nullptr)
             {
                 *iNode=*iNode+1;
-                p=new IndexNode(keyCapacity);
+                p=new IndexNode(keyCapacity, false);
                 p->insert(this->data[inserted-1], iNode, dNode);
                 this->inserted=this->inserted-1;
                 p->ptrs[0]=this;
