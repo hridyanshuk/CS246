@@ -17,21 +17,30 @@ class SplitLinkedLists
 
 class Block
 {
+    
     char type;
+    bool index;
     public:
-    LinkedList *ptrs;
+    IndexNode* parent;
+    // Block *ptrs;
     LinkedList *values;
-    Block(int, char);
+    Block(int, char, bool);
     SplitLinkedLists splitValues(Block*, int);
-    SplitLinkedLists splitPtrs(Block*, int);
+    // SplitLinkedLists splitPtrs(Block*, int);
     bool insertValue();
+    void splitParent(int);
 };
 
-Block::Block(int n, char t)
+Block::Block(int numNodes, char t, bool index=true)
 {
+    this->index=index;
+    parent=nullptr;
     type=t;
-    ptrs = new LinkedList(n+1, 'b');
-    values = new LinkedList(n, type);
+    if(index)
+    {}
+        // ptrs = new LinkedList(numNodes+1, 'b');
+    // else ptrs=nullptr;
+    values = new LinkedList(numNodes, type);
 }
 
 SplitLinkedLists Block::splitValues(Block* newBlock, int k)
@@ -41,17 +50,6 @@ SplitLinkedLists Block::splitValues(Block* newBlock, int k)
     SplitLinkedLists returnValue={
         .split1=values,
         .split2=newBlock->values
-    };
-    return returnValue;
-}
-
-SplitLinkedLists Block::splitPtrs(Block* newBlock, int k)
-{
-    while(ptrs->returnSize()!=k)
-        newBlock->ptrs->insertValueLeft(ptrs->deleteLast());
-    SplitLinkedLists returnValue={
-        .split1=ptrs,
-        .split2=newBlock->ptrs
     };
     return returnValue;
 }
